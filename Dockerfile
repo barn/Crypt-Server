@@ -21,7 +21,13 @@ ENV DOCKER_CRYPT_ADMINS Admin User,admin@test.com
 ENV DOCKER_CRYPT_LANG en_US
 ENV DOCKER_CRYPT_TZ America/New_York
 ADD / $APP_DIR
-RUN apt-get update && \
+
+RUN apt-get install -y curl
+
+# add in the official postgres repos
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+    && curl -sSL http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - \
+    && apt-get update && \
     apt-get install -y software-properties-common && \
     apt-get -y update && \
     add-apt-repository -y ppa:nginx/stable && \
@@ -29,8 +35,8 @@ RUN apt-get update && \
     git \
     python-setuptools \
     nginx \
-    postgresql \
-    postgresql-contrib \
+    postgresql-9.4 \
+    postgresql-contrib-9.4 \
     libpq-dev \
     python-dev \
     supervisor \
